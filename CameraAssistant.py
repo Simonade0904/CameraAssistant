@@ -1,5 +1,4 @@
-from ScrapeGoodwill import gwScrape
+from ScrapeGoodwill import generateGoodwillObj
 import asyncio
 
-result = asyncio.get_event_loop().run_until_complete(gwScrape())
-print(result)
+generateGoodwillObj('Canon')
