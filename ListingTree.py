@@ -9,8 +9,6 @@ class ListingTreeQuestion:
 
     def setNo(self, no):
         self.no = no
-
-
 class ListingTreeObjects:
     def __init__(self, objects = []):
         self.objects = objects
@@ -21,24 +19,7 @@ class ListingTreeObjects:
         self.objects.append(newObject)
 
 def printTree(tree, prefix=''):
-    # try:
-    #     if tree.yes == None and tree.no == None:
-    #         try:
-    #             print(f"---{tree.question}---")
-    #         except AttributeError:
-    #             try:
-    #                 print(f"There are {len(tree.objects)} objects")
-    #             except AttributeError:
-    #                 print("None here")
-    #     else:
-    #         print(f"---{tree.question}---")
-    #         yesPrefix = ''.join[prefix,'->']
-    #         noPrefix = ''.join[prefix,'-x']
-    #         printTree(tree.yes, yesPrefix)
-    #         printTree(tree.no, noPrefix)
-    # except:
-    #     print("There might be a problem with the tree structure.")
-
+    try:
         if tree.yes == None and tree.no == None:
             try:
                 print(f"---{tree.question}---")
@@ -53,6 +34,8 @@ def printTree(tree, prefix=''):
             noPrefix = ''.join([prefix,'-x'])
             printTree(tree.yes, yesPrefix)
             printTree(tree.no, noPrefix)
+    except:
+        print("There might be a problem with the tree structure.")
 
 Q2 = ListingTreeQuestion("Question 2")
 Q3 = ListingTreeQuestion("Question 3")
