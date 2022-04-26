@@ -53,10 +53,8 @@ def recursiveBuild(obj, tree):
         tree.addObject(obj)
     else:
         if tree.func(obj):
-            print("got a true")
             recursiveBuild(obj, tree.yes)
         else:
-            print("got a false")
             recursiveBuild(obj, tree.no)
 
 def buildTree(objectList, treeBeginning):
