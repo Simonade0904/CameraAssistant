@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup as bs
 
 async def gwScrape(brand):
     allContentHTML = []
-    browser = await pyppeteer.launch(headless=False)
+    browser = await pyppeteer.launch(headless=True)
     page = await browser.newPage()
     await page.goto(f'https://shopgoodwill.com/categories/listing?st={brand}&sg=&c=&s=&lp=0&hp=999999&sbn=&spo=false&snpo=false&socs=false&sd=false&sca=false&caed=4%2F9%2F2022&cadb=7&scs=false&sis=false&col=1&p=1&ps=40&desc=false&ss=0&UseBuyerPrefs=true&sus=false&cln=1&catIds=&pn=&wc=false&mci=false&hmt=false&layout=grid',{'waitUntil':'networkidle0'})
     allContentHTML.append(await page.content())

@@ -1,11 +1,21 @@
 from ScrapeGoodwill import generateGoodwillObj
 from ScrapeEbay import generateEbayObj
+from Listing import Listing
+from ListingTree import ListingTreeQuestion, ListingTreeObjects, printTree
 import pickle
 
 def scrapeWithCache(brand):
     try:
-        goodwillObjects = generateGoodwillObj(brand)
-        ebayObjects = generateEbayObj(brand)
+        goodwillObjects = []
+        ebayObjects = []
+        try:
+            goodwillObjects = generateGoodwillObj(brand)
+        except:
+            print("Sorry! We did not get camera information from Goodwill. It's not your fault. If you want, please try again later.")
+        try:
+            ebayObjects = generateEbayObj(brand)
+        except:
+            print("Sorry! We did not get camera information from eBay. It's not your fault. If you want, please try again later.")
         allObjects = goodwillObjects + ebayObjects
         f = open(f"{brand}.p","wb")
         pickle.dump(allObjects, f)
@@ -35,6 +45,47 @@ def retrieveFromCache(brand):
         quit()
 
 
-# a = 1
-# def main():
-#     initial = input("Hello! Welcome to the Camera Assistant. Press q to quit and press any key to start!")
+def toLowerCase(brandName):
+    return brandName.lower()
+
+def recursiveBuild(obj, tree):
+    if tree.yes == None and tree.no == None:
+        tree.addObject(obj)
+    else:
+        if tree.func(obj):
+            print("got a true")
+            recursiveBuild(obj, tree.yes)
+        else:
+            print("got a false")
+            recursiveBuild(obj, tree.no)
+
+def buildTree(objectList, treeBeginning):
+    for obj in objectList:
+        recursiveBuild(obj, treeBeginning)
+
+def generateTreeTemplate():
+    Q1 = ListingTreeQuestion('Would you like to keep the budget within 100 dollars? Say yes to limit budget, say no to only look at items above 100 dollars.',lambda x: float(x.price) <= 100)
+    Q2_1 = ListingTreeQuestion('Would you like to buy from auctions or fixed-price listings? Say yes to try auctions, say no to stick with fixed-price listings.', lambda x: x.buying_type == 'auction')
+    Q2_2 = ListingTreeQuestion('Would you like to buy from auctions or fixed-price listings? Say yes to try auctions, say no to stick with fixed-price listings.', lambda x: x.buying_type == 'auction')
+    ObjList1 = ListingTreeObjects([])
+    ObjList2 = ListingTreeObjects([])
+    ObjList3 = ListingTreeObjects([])
+    ObjList4 = ListingTreeObjects([])
+    Q1.setYes(Q2_1)
+    Q1.setNo(Q2_2)
+    Q2_1.setYes(ObjList1)
+    Q2_1.setNo(ObjList2)
+    Q2_2.setYes(ObjList3)
+    Q2_2.setNo(ObjList4)
+    return Q1
+
+def main():
+    questionTree = generateTreeTemplate()
+    printTree(questionTree)
+    print('\n')
+    testList = retrieveFromCache('canon')
+    buildTree(testList, questionTree)
+    printTree(questionTree)
+
+if __name__ == '__main__':
+    main()

@@ -5,7 +5,7 @@ import re
 from bs4 import BeautifulSoup as bs
 
 async def ebayScrape(brand):
-    browser = await pyppeteer.launch(headless=False)
+    browser = await pyppeteer.launch(headless=True)
     page = await browser.newPage()
     await page.goto(f'https://www.ebay.com/sch/i.html?_from=R40&_nkw={brand}+film+camera&_sacat=0&_ipg=240',{'waitUntil':'networkidle0'})
     ContentHTML = await page.content()
@@ -24,7 +24,7 @@ def generateEbayObj(brand):
     for item in allListings:
         try:
             name = item.find('h3', class_ = 's-item__title').text
-            price = item.find('span', class_ = 's-item__price').text
+            price = item.find('span', class_ = 's-item__price').text[1:]
             time_remaining_element = str(item.find('span', class_ = 's-item__time-left'))
             time_remaining = ' '.join(re.findall(r'(\d+\w)+',time_remaining_element))
             buying_type = 'buy-it-now' if time_remaining == '' else 'auction'
