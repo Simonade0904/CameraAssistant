@@ -99,9 +99,20 @@ def exploreTree(tree):
         else:
             return exploreTree(tree.no)
 
-# def itemsBrowser(selectedObjects):
-#     while True:
-#         selectedObjects
+def printObjList50(objects):
+    if len(objects) <= 50:
+        for index, obj in enumerate(objects):
+            print(str(index + 1) + ' ' + str(obj) + '\n')
+    else:
+        for index, obj in enumerate(objects[0:50]):
+            print(str(index + 1) + ' ' + str(obj) + '\n')
+
+def itemsBrowser(selectedObjects):
+    print(color.BOLD+color.GREEN+"Thank you for the responses! Your camera recommendation list is now ready."+color.END+'\n')
+    while True:
+        command = input(color.BOLD+"What you can type next: \n" +color.END +"\tlist -- print out your camera recommendation list, up to 50 items \n\tfull -- your full camera recommendation list \n\ta number such as 23 -- explore the specific listing \n\tvisualize -- see some data about your recommendations\n\tquit -- quit this application \n")
+        if command == 'list':
+            printObjList50(selectedObjects)
 
 def main():
     print(color.BOLD+"Welcome to the CAMERA ASSISTANT! We will help you find cameras, especially film cameras, that you love!"+color.END)
@@ -110,7 +121,7 @@ def main():
     cameraObjects = []
 
     if checkIsCached(brand):
-        if ask(color.BOLD+f"Looks like we have stored some data for the brand '{brand}''. Would you like to use the locally stored data? "+color.END):
+        if ask(color.BOLD+f"Looks like we have stored some data for the brand '{brand}'. Would you like to use the locally stored data? "+color.END):
             cameraObjects = retrieveFromCache(brand)
         else:
             print(color.BOLD+"Very well, we will go online and find information about this brand."+color.END)
@@ -123,7 +134,7 @@ def main():
     buildTree(cameraObjects, questionTree)
     
     selectedObjects = exploreTree(questionTree)
-    print(selectedObjects)
+    itemsBrowser(selectedObjects)
 
 if __name__ == '__main__':
     main()

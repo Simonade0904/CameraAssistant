@@ -1,3 +1,6 @@
+from dis import dis
+
+
 class Listing:
     def __init__(self,source,name,buying_type,price,url,img_url,time_remaining = None):
         self.name = name
@@ -9,4 +12,12 @@ class Listing:
         self.time_remaining = time_remaining
 
     def __str__(self):
-        return self.description[:20]
+        display_name = ''
+        if len(self.name) > 50:
+            display_name = self.name[:50] + '...'
+        else:
+            display_name = self.name
+
+        display_time = '' if self.buying_type == 'buy-it-now' else f'Time remaining: {self.time_remaining} '
+
+        return (display_name + '\n\t' + f'Price: ${self.price} ' + display_time + f'Source: {self.source}')
