@@ -4,6 +4,19 @@ from Listing import Listing
 from ListingTree import ListingTreeQuestion, ListingTreeObjects, printTree, buildTree, generateTreeTemplate
 import pickle
 
+# Reference: https://stackoverflow.com/questions/8924173/how-to-print-bold-text-in-python
+class color:
+   PURPLE = '\033[95m'
+   CYAN = '\033[96m'
+   DARKCYAN = '\033[36m'
+   BLUE = '\033[94m'
+   GREEN = '\033[92m'
+   YELLOW = '\033[93m'
+   RED = '\033[91m'
+   BOLD = '\033[1m'
+   UNDERLINE = '\033[4m'
+   END = '\033[0m'
+
 def scrapeWithCache(brand):
     print("Fetching camera data, this may take a minute or two ... ")
     try:
@@ -69,7 +82,7 @@ def ask(question):
     yes_list = ['yes','y','yeah','yep','sure','correct','right','true']
     no_list = ['no','n','nope','nah','na','incorrect','wrong','false']
     while True:
-        decision = input(question)
+        decision = input(color.BLUE + question + ' ' + color.END)
         if decision in yes_list:
             return True
         elif decision in no_list:
@@ -91,19 +104,19 @@ def exploreTree(tree):
 #         selectedObjects
 
 def main():
-    print("Welcome to the CAMERA ASSISTANT! We will help you find cameras, especially film cameras, that you love!")
-    brand = toLowerCase(input('Which brand of film camera would you like to explore? You can try typing Canon, Nikon, or Minolta. These are all reputable brands.'))
+    print(color.BOLD+"Welcome to the CAMERA ASSISTANT! We will help you find cameras, especially film cameras, that you love!"+color.END)
+    brand = toLowerCase(input(color.BOLD+'Which brand of film camera would you like to explore? You can try typing Canon, Nikon, or Minolta. These are all reputable brands. '+color.END))
 
     cameraObjects = []
 
     if checkIsCached(brand):
-        if ask(f"Looks like we have stored some data for the brand '{brand}''. Would you like to use the locally stored data? "):
+        if ask(color.BOLD+f"Looks like we have stored some data for the brand '{brand}''. Would you like to use the locally stored data? "+color.END):
             cameraObjects = retrieveFromCache(brand)
         else:
-            print("Very well, we will go online and find information about this brand.")
+            print(color.BOLD+"Very well, we will go online and find information about this brand."+color.END)
             cameraObjects = scrapeWithCache(brand)
     else:
-        print("Great choice! We will go online and find information about this brand.")
+        print(color.BOLD+"Great choice! We will go online and find information about this brand."+color.END)
         cameraObjects = scrapeWithCache(brand)
 
     questionTree = generateTreeTemplate()
