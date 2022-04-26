@@ -34,7 +34,7 @@ def generateGoodwillObj(brand):
                 price = item.find('p', class_ = 'feat-item_price').text[2:]
                 time_remaining_element = str(item.find_all('li', class_ = 'ng-star-inserted')[1])
                 time_remaining = ' '.join(re.findall(r'(\d+\w)+',time_remaining_element)[2:4])
-                url = item.find('a', class_ = 'feat-item_name').attrs['href']
+                url = ''.join(['https://shopgoodwill.com',item.find('a', class_ = 'feat-item_name').attrs['href']])
                 img_url = item.find('img', class_ = 'feat-item_img').attrs['src']
                 listingObjects.append(Listing("goodwill", name, "auction", price, url, img_url, time_remaining))
             except AttributeError as e:
