@@ -1,6 +1,8 @@
 from ScrapeGoodwill import generateGoodwillObj
 from ScrapeEbay import generateEbayObj
 from ListingTree import buildTree, generateTreeTemplate
+import termplotlib as tpl
+import numpy as np
 import pickle
 import webbrowser as w
 
@@ -123,6 +125,31 @@ def objectDetail(obj):
         else:
             print(color.RED+"Invalid command. Please try again."+color.END)
 
+def dataView(objects):
+    # Generate tally for eBay and Goodwill items
+    goodwillCount = 0
+    ebayCount = 0
+    for obj in objects:
+        if obj.source == 'goodwill':
+            goodwillCount += 1
+        else:
+            ebayCount += 1
+    sourceList = ['Goodwill', 'eBay']
+    fig1 = tpl.figure()
+    fig1.barh([goodwillCount, ebayCount], sourceList, force_ascii=True)
+    print(color.YELLOW + '\nEver wondered how many items we fetched from Goodwill and eBay respectively? Here it is!' + color.END)
+    fig1.show()
+
+
+    # Generate a histogram for price distribution
+    print(color.YELLOW + '\nHere is a view on the price distribution of the items that fit your preference!' + color.END)
+    priceList = [float(obj.price) for obj in objects]
+    counts, bin_edges = np.histogram(priceList, 10)
+    fig2 = tpl.figure()
+    fig2.hist(counts, bin_edges, orientation="horizontal", force_ascii=False)
+    fig2.show()
+    print('\n')
+
 
 def itemsBrowser(selectedObjects):
     print(color.BOLD+color.GREEN+"\nThank you for the responses! Your camera recommendation list is now ready."+color.END+'\n')
@@ -133,6 +160,8 @@ def itemsBrowser(selectedObjects):
             printObjList50(selectedObjects)
         elif command == 'full':
             printObjListAll(selectedObjects)
+        elif command == 'data':
+            dataView(selectedObjects)
         elif command == 'quit':
             quit()
         else:
