@@ -60,7 +60,6 @@ def float_with_exception(value):
     try:
         floatVal = float(value)
     except ValueError as e:
-        print(e)
         floatVal = 200
     return floatVal
 

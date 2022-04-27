@@ -19,7 +19,6 @@ def generateEbayObj(brand):
     soup = bs(page, 'html.parser')
 
     allListings = soup.find_all('li', class_ = 's-item')
-    print(allListings)
 
     for item in allListings:
         try:

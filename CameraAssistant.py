@@ -1,8 +1,8 @@
 from ScrapeGoodwill import generateGoodwillObj
 from ScrapeEbay import generateEbayObj
-from Listing import Listing
-from ListingTree import ListingTreeQuestion, ListingTreeObjects, printTree, buildTree, generateTreeTemplate
+from ListingTree import buildTree, generateTreeTemplate
 import pickle
+import webbrowser as w
 
 # Reference: https://stackoverflow.com/questions/8924173/how-to-print-bold-text-in-python
 class color:
@@ -107,27 +107,56 @@ def printObjList50(objects):
         for index, obj in enumerate(objects[0:50]):
             print(str(index + 1) + ' ' + str(obj) + '\n')
 
-def itemsBrowser(selectedObjects):
-    print(color.BOLD+color.GREEN+"Thank you for the responses! Your camera recommendation list is now ready."+color.END+'\n')
+def printObjListAll(objects):
+    for index, obj in enumerate(objects):
+        print(str(index + 1) + ' ' + str(obj) + '\n')
+
+def objectDetail(obj):
     while True:
-        command = input(color.BOLD+"What you can type next: \n" +color.END +"\tlist -- print out your camera recommendation list, up to 50 items \n\tfull -- your full camera recommendation list \n\ta number such as 23 -- explore the specific listing \n\tvisualize -- see some data about your recommendations\n\tquit -- quit this application \n")
+        print(color.BOLD+'\nThis is the item you selected:\n'+color.END + obj.print_full() + '\n')
+        command = input(color.BOLD+"What you can type next: \n" +color.END +"\tvisit -- see the item in your browser \n\tback -- go back to the menu with all items\n")
+        if command == 'visit':
+            w.open(obj.url)
+        elif command == 'back':
+            print(color.BOLD+color.GREEN+"\nYou are now back to camera recommendation list."+color.END+'\n')
+            return
+        else:
+            print(color.RED+"Invalid command. Please try again."+color.END)
+
+
+def itemsBrowser(selectedObjects):
+    print(color.BOLD+color.GREEN+"\nThank you for the responses! Your camera recommendation list is now ready."+color.END+'\n')
+
+    while True:
+        command = input(color.BOLD+"What you can type next: \n" +color.END +"\tlist -- a quick view of your camera recommendation list, up to first 50 items \n\tfull -- your full camera recommendation list \n\ta number such as 23 -- explore the specific listing \n\tdata -- see some data about your recommendations\n\tquit -- quit this application \n")
         if command == 'list':
             printObjList50(selectedObjects)
+        elif command == 'full':
+            printObjListAll(selectedObjects)
+        elif command == 'quit':
+            quit()
+        else:
+            try:
+                if int(command) in range(len(selectedObjects)):
+                    objectDetail(selectedObjects[int(command)-1])
+            except:
+                print(color.RED+"Invalid command. Please try again."+color.END)
+
 
 def main():
-    print(color.BOLD+"Welcome to the CAMERA ASSISTANT! We will help you find cameras, especially film cameras, that you love!"+color.END)
-    brand = toLowerCase(input(color.BOLD+'Which brand of film camera would you like to explore? You can try typing Canon, Nikon, or Minolta. These are all reputable brands. '+color.END))
+    print(color.BOLD+color.UNDERLINE+"\nWelcome to the CAMERA ASSISTANT! We will help you find cameras, especially film cameras, that you love!"+color.END)
+    brand = toLowerCase(input(color.BOLD+'\nWhich brand of film camera would you like to explore? You can try typing Canon, Nikon, or Minolta. These are all reputable brands. '+color.END))
 
     cameraObjects = []
 
     if checkIsCached(brand):
-        if ask(color.BOLD+f"Looks like we have stored some data for the brand '{brand}'. Would you like to use the locally stored data? "+color.END):
+        if ask(color.BOLD+f"\nLooks like we have stored some data for the brand '{brand}'. Would you like to use the locally stored data? "+color.END):
             cameraObjects = retrieveFromCache(brand)
         else:
-            print(color.BOLD+"Very well, we will go online and find information about this brand."+color.END)
+            print(color.BOLD+"\nVery well, we will go online and find information about this brand."+color.END)
             cameraObjects = scrapeWithCache(brand)
     else:
-        print(color.BOLD+"Great choice! We will go online and find information about this brand."+color.END)
+        print(color.BOLD+"\nGreat choice! We will go online and find information about this brand."+color.END)
         cameraObjects = scrapeWithCache(brand)
 
     questionTree = generateTreeTemplate()

@@ -8,7 +8,7 @@ class Listing:
         self.buying_type = buying_type
         self.price = price
         self.url = url
-        self.img_url = img_url
+        self.img_url = img_url #Turns out it cannot be reliably scraped. Do not use in main application.
         self.time_remaining = time_remaining
 
     def __str__(self):
@@ -21,3 +21,7 @@ class Listing:
         display_time = '' if self.buying_type == 'buy-it-now' else f'Time remaining: {self.time_remaining} '
 
         return (display_name + '\n\t' + f'Price: ${self.price} ' + display_time + f'Source: {self.source}')
+
+    def print_full(self):
+        display_time = '' if self.buying_type == 'buy-it-now' else f'Time remaining: {self.time_remaining} '
+        return (self.name+ '\n\t' + f'Price: ${self.price} ' + display_time + f'Source: {self.source}')
